@@ -7,6 +7,12 @@ export interface Question {
   id: number;
   category: string;
   type: string;
+  typeNum?: number;
+  typeLabel?: string;
+  typeNameHi?: string;
+  typeNameEn?: string;
+  shortName?: string;
+  typeTitle?: string;
   year?: string;
   exam: string;
   en: string;

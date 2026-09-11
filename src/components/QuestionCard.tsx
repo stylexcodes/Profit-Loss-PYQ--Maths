@@ -45,9 +45,22 @@ export const QuestionCard: React.FC<Props> = ({
             Q. {question.id}
           </span>
 
-          {/* Type Badge */}
-          <span className="inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
-            {question.type}
+          {/* Type Badge with Full Type Name */}
+          <span
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-300 shadow-2xs"
+            title={question.typeNameHi ? `${question.type}: ${question.typeNameHi} (${question.typeNameEn})` : question.type}
+          >
+            <span className="font-extrabold bg-slate-900 text-amber-300 px-1.5 py-0.2 rounded text-[10px]">
+              {question.type}
+            </span>
+            <span className="font-hindi font-bold text-[11px]">
+              {question.shortName || question.typeNameHi || question.category}
+            </span>
+            {question.typeNameEn && (
+              <span className="hidden sm:inline text-[10px] text-amber-800 font-normal">
+                ({question.typeNameEn})
+              </span>
+            )}
           </span>
 
           {/* Year Badge */}

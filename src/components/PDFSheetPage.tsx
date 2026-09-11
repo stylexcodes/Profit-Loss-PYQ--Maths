@@ -1,6 +1,7 @@
 import React from 'react';
 import { Question, PDFCustomization } from '../types';
 import { Award, BookOpen, CheckCircle } from 'lucide-react';
+import { getTypeDefinition, isTypeStart } from '../utils/typeMapping';
 
 interface Props {
   sheetNumber: number;
@@ -27,6 +28,13 @@ export const PDFSheetPage: React.FC<Props> = ({
 }) => {
   const startId = questions.length > 0 ? questions[0].id : 0;
   const endId = questions.length > 0 ? questions[questions.length - 1].id : 0;
+
+  const startType = getTypeDefinition(startId);
+  const endType = getTypeDefinition(endId);
+  const typeSummary =
+    startType.typeNum === endType.typeNum
+      ? `${startType.badgeLabel}: ${startType.shortName}`
+      : `${startType.badgeLabel} & ${endType.badgeLabel}: ${startType.shortName} / ${endType.shortName}`;
 
   // Split questions into 2 balanced columns (or 1 column if requested)
   const isTwoCol = customization.columnCount !== 1;
@@ -59,8 +67,8 @@ export const PDFSheetPage: React.FC<Props> = ({
             <span className="font-extrabold text-[12px] tracking-tight uppercase text-slate-900">
               Maths By Abhishek Upadhyay Sir
             </span>
-            <span className="text-[10px] text-slate-500 ml-2 hidden sm:inline">
-              | Profit & Loss Level - I
+            <span className="text-[10px] text-amber-800 font-semibold ml-2 font-hindi hidden sm:inline bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+              {typeSummary}
             </span>
           </div>
         </div>
@@ -135,17 +143,32 @@ const SheetQuestionCard: React.FC<{
 
   return (
     <div className="bg-white border border-slate-200 rounded-md p-2 flex flex-col justify-between shadow-none hover:border-amber-400 transition-colors">
+      {/* Section Type Opener Banner if this question is the first in its Type */}
+      {isTypeStart(question.id) && (
+        <div className="mb-1.5 px-2 py-0.5 rounded bg-gradient-to-r from-slate-950 to-blue-950 text-white flex items-center justify-between text-[9px] font-bold border-l-2 border-amber-400">
+          <span className="text-amber-300 font-hindi truncate">
+            ❖ {question.type} : {question.typeNameHi || question.category}
+          </span>
+          {question.typeNameEn && (
+            <span className="text-slate-300 text-[8px] font-normal shrink-0 ml-1">
+              ({question.typeNameEn})
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Badge Header */}
       <div className="flex items-center justify-between gap-1 mb-1 pb-1 border-b border-slate-100 text-[10px]">
         <div className="flex items-center gap-1 flex-wrap">
           <span className="font-bold px-1.5 py-0.5 rounded bg-slate-900 text-amber-300 font-mono-num text-[10px]">
             Q. {question.id}
           </span>
-          <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold text-[9px] border border-slate-200">
-            {question.type}
+          <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-950 font-bold text-[9px] border border-amber-300 flex items-center gap-1 shadow-2xs">
+            <span className="bg-slate-900 text-amber-300 px-1 py-0.2 rounded text-[8px] font-extrabold">{question.type}</span>
+            <span className="font-hindi text-[9px]">{question.shortName || question.typeNameHi || question.category}</span>
           </span>
           {question.year && (
-            <span className="px-1 py-0.5 rounded bg-amber-50 text-amber-800 font-mono-num text-[9px] border border-amber-200">
+            <span className="px-1 py-0.5 rounded bg-slate-100 text-slate-700 font-mono-num text-[9px] border border-slate-200">
               {question.year}
             </span>
           )}

@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
 import { Question, PDFCustomization } from '../types';
+import { getTypeDefinition, isTypeStart, ALL_TYPE_DEFINITIONS } from './typeMapping';
 
 export interface PDFGenerationProgress {
   status: 'idle' | 'rendering' | 'compiling' | 'success' | 'error';
@@ -395,14 +396,31 @@ export function getStandaloneBookletHTML(
 
   <!-- Cover Page -->
   <div class="sheet-container cover-box">
-    <div style="text-align: center; margin: auto;">
+    <div style="text-align: center; margin: auto; max-width: 90%;">
       <div style="text-transform: uppercase; font-size: 13px; letter-spacing: 2px;">Exclusive Mathematics Series</div>
       <div class="cover-title">PROFIT & LOSS</div>
       <div class="cover-sub">LEVEL - I COMPLETE WORKBOOK (Q.1 TO Q.180)</div>
-      <p style="font-size: 14px; margin-top: 15px; opacity: 0.9;">
+      <p style="font-size: 14px; margin-top: 12px; opacity: 0.9;">
         लाभ एवं हानि - सभी महत्वपूर्ण प्रकार के प्रश्नों का संपूर्ण द्विभाषी संकलन (180 प्रश्न)
       </p>
-      <div style="margin-top: 25px; padding: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; display: inline-block;">
+      
+      <!-- 13 Types Index Matrix -->
+      <div style="margin-top: 20px; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; text-align: left;">
+        <div style="font-size: 11px; font-weight: bold; color: #fde047; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 4px; display: flex; justify-content: space-between;">
+          <span>📑 Complete 13 Types Classification Index (प्रकार-वार अनुक्रमणिका)</span>
+          <span>180 MCQs</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; font-size: 10px;">
+          ${ALL_TYPE_DEFINITIONS.map((t) => `
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 2px 0;">
+              <span><strong style="color: #fde047;">${t.badgeLabel}:</strong> ${t.nameHi}</span>
+              <span style="opacity: 0.8; font-family: monospace;">${t.range}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; display: inline-block; font-size: 11px;">
         <strong>Faculty:</strong> Abhishek Upadhyay Sir &nbsp;•&nbsp; <strong>Total Questions:</strong> 180 &nbsp;•&nbsp; <strong>Target Exams:</strong> SSC CGL, CHSL, CPO, GD, UPP, UPSI, RRB NTPC
       </div>
     </div>
@@ -422,11 +440,21 @@ export function getStandaloneBookletHTML(
       const pageNum = sheetIdx + 2;
       const totalPages = totalSheets + 2;
 
+      const firstTypeDef = getTypeDefinition(sheetQuestions[0].id);
+      const lastTypeDef = getTypeDefinition(sheetQuestions[sheetQuestions.length - 1].id);
+      const sheetTypeSummary =
+        firstTypeDef.typeNum === lastTypeDef.typeNum
+          ? `${firstTypeDef.badgeLabel}: ${firstTypeDef.shortName}`
+          : `${firstTypeDef.badgeLabel} & ${lastTypeDef.badgeLabel}: ${firstTypeDef.shortName} / ${lastTypeDef.shortName}`;
+
       return `
   <div class="sheet-container">
     <div class="sheet-header">
       <div>
         <strong>Maths By Abhishek Upadhyay Sir</strong> | Profit & Loss Level-1
+        <span style="margin-left: 8px; font-size: 10px; background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; border: 1px solid #fde68a; font-weight: bold;">
+          ${sheetTypeSummary}
+        </span>
       </div>
       <div>
         <strong>Sheet ${sheetNum} of ${totalSheets}</strong> (Q.${sheetQuestions[0].id} - Q.${sheetQuestions[sheetQuestions.length - 1].id})
@@ -436,11 +464,22 @@ export function getStandaloneBookletHTML(
     <div class="sheet-grid">
       ${sheetQuestions
         .map(
-          (q) => `
+          (q) => {
+            const t = getTypeDefinition(q.id);
+            const isStart = isTypeStart(q.id);
+            return `
       <div class="card">
-        <div style="margin-bottom: 4px; display: flex; gap: 4px; flex-wrap: wrap;">
+        ${isStart ? `
+        <div style="background: linear-gradient(90deg, #091e3a, #1e3a8a); color: #fff; padding: 3px 6px; border-radius: 4px; margin-bottom: 4px; font-size: 10px; font-weight: bold; border-left: 3px solid #f59e0b; display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #fde047;">❖ ${t.typeLabel} : ${t.nameHi}</span>
+          <span style="color: #cbd5e1; font-size: 8.5px; font-weight: normal;">(${t.nameEn}) [${t.range}]</span>
+        </div>` : ''}
+        <div style="margin-bottom: 4px; display: flex; gap: 4px; flex-wrap: wrap; align-items: center;">
           <span class="badge badge-q">Q.${q.id}</span>
-          <span class="badge badge-type">${q.type}</span>
+          <span class="badge" style="background: #fef3c7; color: #78350f; border: 1px solid #fde68a; font-weight: bold; display: inline-flex; align-items: center; gap: 3px;">
+            <span style="background: #0f172a; color: #fde047; padding: 1px 4px; border-radius: 3px; font-size: 8px; font-weight: 800;">${t.typeLabel}</span>
+            <span style="font-size: 9px;">${t.shortName}</span>
+          </span>
           ${q.year ? `<span class="badge badge-year">${q.year}</span>` : ''}
           <span class="badge badge-exam">${q.exam}</span>
         </div>
@@ -460,7 +499,8 @@ export function getStandaloneBookletHTML(
             )
             .join('')}
         </div>
-      </div>`
+      </div>`;
+          }
         )
         .join('')}
     </div>
@@ -580,14 +620,19 @@ export function downloadWordDocument(
   <hr/>
   ${questions
     .map(
-      (q) => `
-    <p><b>Q.${q.id} [${q.type}] (${q.exam} - ${q.year || ''})</b><br/>
+      (q) => {
+        const t = getTypeDefinition(q.id);
+        const isStart = isTypeStart(q.id);
+        return `
+    ${isStart ? `<h3 style="background:#1e3a8a;color:#fff;padding:8px 12px;margin-top:24px;border-left:5px solid #f59e0b;">❖ ${t.typeLabel} : ${t.nameHi} (${t.nameEn}) [${t.range}]</h3>` : ''}
+    <p><b>Q.${q.id} [${t.typeLabel}: ${t.nameHi}] (${q.exam} - ${q.year || ''})</b><br/>
     <b>English:</b> ${q.en}<br/>
     <b>Hindi:</b> ${q.hi}<br/>
     <b>Options:</b> ${q.options.map((o) => `(${o.label}) ${o.text}`).join(' &nbsp; | &nbsp; ')}<br/>
     <b style="color: green;">Correct Answer: (${q.correctAnswer})</b><br/>
     ${q.solutionHint ? `<i>Solution: ${q.solutionHint}</i><br/>` : ''}
-    </p><hr/>`
+    </p><hr/>`;
+      }
     )
     .join('')}
   <br/>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { PDFCustomization } from '../types';
 import { Award, BookOpen, CheckCircle, Sparkles } from 'lucide-react';
+import { ALL_TYPE_DEFINITIONS } from '../utils/typeMapping';
 
 interface Props {
   customization: PDFCustomization;
@@ -142,6 +143,27 @@ export const PDFCoverPage: React.FC<Props> = ({ customization, totalQuestions })
           <div className="p-2.5 rounded-lg bg-slate-800/50 border border-slate-700/60 backdrop-blur-sm">
             <span className="block font-mono-num text-xl font-bold text-amber-400">2026</span>
             <span className="text-[10px] opacity-75 uppercase tracking-wider">Latest PYQs</span>
+          </div>
+        </div>
+
+        {/* 13 Types Classification Index */}
+        <div className="mt-4 p-3 rounded-lg bg-slate-900/70 border border-slate-700/70 text-left max-w-2xl mx-auto backdrop-blur-xs">
+          <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-slate-700/80 text-[10px] font-bold uppercase tracking-wider text-amber-300">
+            <span>📑 Complete 13 Types Classification Index (प्रकार-वार अनुक्रमणिका)</span>
+            <span className="font-mono-num">180 MCQs</span>
+          </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[10px]">
+            {ALL_TYPE_DEFINITIONS.map((t) => (
+              <div key={t.typeNum} className="flex items-center justify-between py-0.5 border-b border-slate-800/60">
+                <span className="font-hindi text-slate-200 truncate">
+                  <strong className="text-amber-400 font-mono-num mr-1">{t.badgeLabel}:</strong>
+                  {t.nameHi}
+                </span>
+                <span className="text-slate-400 font-mono-num text-[9px] shrink-0 ml-1.5">
+                  {t.range}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
