@@ -1,0 +1,6 @@
+{
+  "name": "Maths Designer PDF Studio - Profit & Loss Level I",
+  "description": "A high-end modern designer PDF publishing and interactive study suite for Profit & Loss (Q1 to Q180) by Abhishek Upadhyay Sir.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
