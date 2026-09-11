@@ -12,8 +12,6 @@ import {
   FileCode,
   FileSpreadsheet,
   AlertCircle,
-  Mail,
-  HardDrive,
   CheckCircle2,
   Zap
 } from 'lucide-react';
@@ -31,7 +29,6 @@ interface Props {
   onClose: () => void;
   customization: PDFCustomization;
   questions: Question[];
-  userEmail?: string;
 }
 
 export const PDFExportModal: React.FC<Props> = ({
@@ -39,7 +36,6 @@ export const PDFExportModal: React.FC<Props> = ({
   onClose,
   customization,
   questions,
-  userEmail = "itsrajat2002@gmail.com"
 }) => {
   const [copied, setCopied] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState<PDFGenerationProgress | null>(null);
@@ -87,67 +83,7 @@ export const PDFExportModal: React.FC<Props> = ({
     }
   };
 
-  // 3. Save to Google Drive
-  const handleSaveToDrive = async () => {
-    setIsGeneratingPDF(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-    try {
-      await generateAndDownloadPDF(
-        'printable-pdf-area',
-        {
-          fileName: 'Maths_Profit_and_Loss_Level_1_Abhishek_Sir.pdf',
-          scale: 3.0,
-          quality: 0.98,
-          onProgress: (p) => setDownloadProgress(p)
-        }
-      );
-      setSuccessMessage('HD PDF downloaded! Opening Google Drive so you can save or drop it into your Drive...');
-      setTimeout(() => {
-        window.open('https://drive.google.com/drive/my-drive', '_blank');
-      }, 1200);
-    } catch (err: any) {
-      console.error('Drive save error:', err);
-      setErrorMessage(err?.message || 'Could not compile PDF. Try the Offline Booklet option.');
-    } finally {
-      setIsGeneratingPDF(false);
-    }
-  };
-
-  // 4. Email PDF to user
-  const handleEmailPDF = async () => {
-    setIsGeneratingPDF(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-    try {
-      await generateAndDownloadPDF(
-        'printable-pdf-area',
-        {
-          fileName: 'Maths_Profit_and_Loss_Level_1_Abhishek_Sir.pdf',
-          scale: 3.0,
-          quality: 0.98,
-          onProgress: (p) => setDownloadProgress(p)
-        }
-      );
-      setSuccessMessage(`HD PDF downloaded to your device! Opening Gmail to send to ${userEmail}...`);
-
-      const subject = encodeURIComponent('Maths Profit & Loss Level 1 (Q1-Q180) - Abhishek Upadhyay Sir');
-      const body = encodeURIComponent(
-        `Dear Student,\n\nHere is your requested Profit & Loss Level 1 Workbook (Q.1 to Q.180 Bilingual) by Abhishek Upadhyay Sir in High-Definition 300 DPI.\n\nThe PDF has been downloaded to your device as 'Maths_Profit_and_Loss_Level_1_Abhishek_Sir.pdf'. Please find it in your Downloads folder and attach it.\n\nKey Highlights:\n- 180 Questions bilingual (Hindi & English)\n- Type-wise classification (Types 1 to 13)\n- PYQs with exam badges (2024-2026)\n- Master Answer Key (1-180)\n\nMaths By Abhishek Upadhyay Sir`
-      );
-
-      setTimeout(() => {
-        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${userEmail}&su=${subject}&body=${body}`, '_blank');
-      }, 1000);
-    } catch (err: any) {
-      console.error('Email PDF error:', err);
-      setErrorMessage(err?.message || 'Could not compile PDF. Try the Offline Booklet option.');
-    } finally {
-      setIsGeneratingPDF(false);
-    }
-  };
-
-  // 5. Direct Standalone Booklet Download (.html)
+  // 3. Direct Standalone Booklet Download (.html)
   const handleDownloadBooklet = () => {
     downloadStandaloneBooklet(
       questions,
@@ -156,7 +92,7 @@ export const PDFExportModal: React.FC<Props> = ({
     );
   };
 
-  // 6. Direct Word Document Download (.doc)
+  // 4. Direct Word Document Download (.doc)
   const handleDownloadDoc = () => {
     downloadWordDocument(
       questions,
@@ -164,7 +100,7 @@ export const PDFExportModal: React.FC<Props> = ({
     );
   };
 
-  // 7. Copy raw text
+  // 5. Copy raw text
   const handleCopyText = () => {
     const text = questions
       .map(
@@ -327,59 +263,7 @@ export const PDFExportModal: React.FC<Props> = ({
             </button>
           </div>
 
-          {/* Option 3: Save to Google Drive */}
-          <div className="p-4 rounded-xl border border-sky-200 bg-sky-50/70 hover:bg-sky-50 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-sky-600 text-white">
-                  Google Drive
-                </span>
-                <h4 className="font-bold text-slate-900 text-sm">
-                  Save HD PDF to Google Drive
-                </h4>
-              </div>
-              <p className="text-xs text-slate-600 mt-1">
-                Generates the High-Definition PDF file and opens your Google Drive (<code className="text-sky-800 font-semibold">drive.google.com</code>) to upload or store your workbook permanently.
-              </p>
-            </div>
-
-            <button
-              disabled={isGeneratingPDF}
-              onClick={handleSaveToDrive}
-              className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:bg-sky-400 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all shrink-0 cursor-pointer"
-            >
-              <HardDrive className="w-4 h-4 text-white" />
-              <span>Save to Drive</span>
-            </button>
-          </div>
-
-          {/* Option 4: Send to Email */}
-          <div className="p-4 rounded-xl border border-indigo-200 bg-indigo-50/70 hover:bg-indigo-50 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-600 text-white">
-                  Email Delivery
-                </span>
-                <h4 className="font-bold text-slate-900 text-sm">
-                  Send HD PDF to Email ({userEmail})
-                </h4>
-              </div>
-              <p className="text-xs text-slate-600 mt-1">
-                Downloads the HD PDF and opens Gmail composer addressed to <span className="font-semibold text-indigo-900">{userEmail}</span> with pre-filled subject and workbook details.
-              </p>
-            </div>
-
-            <button
-              disabled={isGeneratingPDF}
-              onClick={handleEmailPDF}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all shrink-0 cursor-pointer"
-            >
-              <Mail className="w-4 h-4 text-white" />
-              <span>Send to Email</span>
-            </button>
-          </div>
-
-          {/* Option 5: Instant Offline Booklet (.html) */}
+          {/* Option 3: Instant Offline Booklet (.html) */}
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
@@ -404,7 +288,7 @@ export const PDFExportModal: React.FC<Props> = ({
             </button>
           </div>
 
-          {/* Option 6: Microsoft Word / Google Docs (.doc) */}
+          {/* Option 4: Microsoft Word / Google Docs (.doc) */}
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
