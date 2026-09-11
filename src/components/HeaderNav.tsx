@@ -63,13 +63,14 @@ export const HeaderNav: React.FC<Props> = ({
           {/* Practice Test mode toggle */}
           <button
             onClick={onToggleInteractive}
-            className={`hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
               isInteractive
                 ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-sm'
                 : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700'
             }`}
+            title={isInteractive ? 'Practice test mode active: click to disable' : 'Turn on interactive practice test mode'}
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
             <span>{isInteractive ? 'Test Mode: ON' : 'Practice Test'}</span>
           </button>
 
