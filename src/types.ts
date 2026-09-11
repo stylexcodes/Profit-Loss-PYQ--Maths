@@ -19,6 +19,7 @@ export interface Question {
   hi: string;
   options: QuestionOption[];
   correctAnswer?: 'a' | 'b' | 'c' | 'd';
+  answer?: 'a' | 'b' | 'c' | 'd';
   pageOriginal?: number;
   solutionHint?: string;
 }

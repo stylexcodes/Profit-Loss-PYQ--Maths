@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Question, PDFCustomization } from '../types';
 import { Check, HelpCircle, Bookmark, Star } from 'lucide-react';
-import { AIHintCard } from './AIHintCard';
 
 interface Props {
   question: Question;
@@ -159,9 +158,6 @@ export const QuestionCard: React.FC<Props> = ({
           );
         })}
       </div>
-
-      {/* AI Step-by-Step Hint (Hidden when printing via CSS print media rules) */}
-      <AIHintCard question={question} compact={isCompact} />
 
       {/* Solution Hint (Interactive or Answer Reveal) */}
       {showSolution && question.solutionHint && (

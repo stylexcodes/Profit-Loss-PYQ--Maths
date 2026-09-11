@@ -15,6 +15,7 @@ export const allQuestions: Question[] = rawQuestions.map((q) => {
   const typeDef = getTypeDefinition(q.id);
   return {
     ...q,
+    answer: q.correctAnswer,
     category: typeDef.fullTitle,
     type: typeDef.typeLabel,
     typeNum: typeDef.typeNum,

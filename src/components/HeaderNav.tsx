@@ -6,8 +6,9 @@ interface Props {
   customization: PDFCustomization;
   onOpenExportModal: () => void;
   onQuickDownloadBooklet: () => void;
-  isInteractive: boolean;
-  onToggleInteractive: () => void;
+  isInteractive?: boolean;
+  onToggleInteractive?: () => void;
+  onStartPracticeTest?: () => void;
   bookmarkedCount: number;
   showOnlyBookmarked: boolean;
   onToggleShowBookmarked: () => void;
@@ -19,8 +20,9 @@ export const HeaderNav: React.FC<Props> = ({
   customization,
   onOpenExportModal,
   onQuickDownloadBooklet,
-  isInteractive,
+  isInteractive = false,
   onToggleInteractive,
+  onStartPracticeTest,
   bookmarkedCount,
   showOnlyBookmarked,
   onToggleShowBookmarked,
@@ -60,18 +62,20 @@ export const HeaderNav: React.FC<Props> = ({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Practice Test mode toggle */}
+          {/* Practice Test button to launch new quiz interface */}
           <button
-            onClick={onToggleInteractive}
-            className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
-              isInteractive
-                ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-sm'
-                : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700'
-            }`}
-            title={isInteractive ? 'Practice test mode active: click to disable' : 'Turn on interactive practice test mode'}
+            onClick={() => {
+              if (onStartPracticeTest) {
+                onStartPracticeTest();
+              } else if (onToggleInteractive) {
+                onToggleInteractive();
+              }
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 border border-amber-300 shadow-md shadow-amber-500/20 transition-all cursor-pointer hover:scale-105 active:scale-95"
+            title="Launch interactive practice test with audio feedback and live scoring"
           >
-            <Sparkles className="w-3.5 h-3.5 shrink-0" />
-            <span>{isInteractive ? 'Test Mode: ON' : 'Practice Test'}</span>
+            <Sparkles className="w-3.5 h-3.5 shrink-0 text-slate-950" />
+            <span>Practice Test</span>
           </button>
 
           {/* Bookmarks Filter */}

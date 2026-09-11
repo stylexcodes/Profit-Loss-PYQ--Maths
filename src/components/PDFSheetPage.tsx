@@ -2,7 +2,6 @@ import React from 'react';
 import { Question, PDFCustomization } from '../types';
 import { Award, BookOpen, CheckCircle } from 'lucide-react';
 import { getTypeDefinition, isTypeStart } from '../utils/typeMapping';
-import { AIHintCard } from './AIHintCard';
 
 interface Props {
   sheetNumber: number;
@@ -227,9 +226,6 @@ const SheetQuestionCard: React.FC<{
           );
         })}
       </div>
-
-      {/* AI Step-by-Step Hint (Hidden when printing via CSS print media rules) */}
-      <AIHintCard question={question} compact={true} />
     </div>
   );
 };

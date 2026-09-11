@@ -9,6 +9,8 @@ import { PDFCoverPage } from './components/PDFCoverPage';
 import { AnswerKeyMatrix } from './components/AnswerKeyMatrix';
 import { PDFExportModal } from './components/PDFExportModal';
 import { downloadStandaloneBooklet } from './utils/pdfDownloader';
+import { PracticeTestView } from './components/PracticeTestView';
+import { TopicDashboardGrid } from './components/TopicDashboardGrid';
 import { BookOpen, Sparkles, Filter, ChevronUp, CheckCircle, Search, HelpCircle, FileSpreadsheet, LayoutGrid } from 'lucide-react';
 
 export default function App() {
@@ -30,6 +32,8 @@ export default function App() {
   const [selectedTopic, setSelectedTopic] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isInteractive, setIsInteractive] = useState<boolean>(false);
+  const [isPracticeTestActive, setIsPracticeTestActive] = useState<boolean>(false);
+  const [practiceTestTopic, setPracticeTestTopic] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'sheets' | 'cards'>('sheets');
   const [bookmarks, setBookmarks] = useState<number[]>(() => {
     try {
@@ -58,6 +62,26 @@ export default function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Hash-based routing to support browser back button, direct links, and reload
+  useEffect(() => {
+    const syncFromHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#test' || hash === '#practice-test' || hash.startsWith('#test-')) {
+        const topicPart = hash.replace(/^#(test-|practice-test|test)/, '');
+        if (topicPart) {
+          setPracticeTestTopic(topicPart);
+        }
+        setIsPracticeTestActive(true);
+      } else if (isPracticeTestActive && (!hash || hash === '#')) {
+        setIsPracticeTestActive(false);
+      }
+    };
+
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [isPracticeTestActive]);
 
   const handleToggleBookmark = (id: number) => {
     setBookmarks((prev) =>
@@ -133,6 +157,44 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleStartPracticeTest = (topicId?: string) => {
+    const targetTopic = topicId || (selectedTopic !== 'all' ? selectedTopic : 'all');
+    setPracticeTestTopic(targetTopic);
+    setIsPracticeTestActive(true);
+    try {
+      window.location.hash = targetTopic !== 'all' ? `test-${targetTopic}` : 'test';
+    } catch {
+      // ignore
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  const handleExitPracticeTest = () => {
+    setIsPracticeTestActive(false);
+    try {
+      if (window.location.hash) {
+        history.pushState(null, '', window.location.pathname + window.location.search);
+      }
+    } catch {
+      // ignore
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  // Dedicated Test Interface View
+  if (isPracticeTestActive) {
+    return (
+      <PracticeTestView
+        questions={allQuestions}
+        initialTopicId={practiceTestTopic}
+        topicSections={TOPIC_SECTIONS}
+        onExit={handleExitPracticeTest}
+        bookmarkedIds={bookmarks}
+        onToggleBookmark={handleToggleBookmark}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-amber-200 selection:text-slate-900 relative">
       {/* Top Header Navigation */}
@@ -142,6 +204,7 @@ export default function App() {
         onQuickDownloadBooklet={() => downloadStandaloneBooklet(allQuestions, customization)}
         isInteractive={isInteractive}
         onToggleInteractive={() => setIsInteractive(!isInteractive)}
+        onStartPracticeTest={() => handleStartPracticeTest()}
         bookmarkedCount={bookmarks.length}
         showOnlyBookmarked={showOnlyBookmarked}
         onToggleShowBookmarked={() => setShowOnlyBookmarked(!showOnlyBookmarked)}
@@ -151,6 +214,18 @@ export default function App() {
 
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
+        {/* Main Dashboard Grid with Standout Practice Test Button Alongside Other Topics */}
+        <TopicDashboardGrid
+          topics={TOPIC_SECTIONS}
+          selectedTopic={selectedTopic}
+          onSelectTopic={(topic) => {
+            setSelectedTopic(topic);
+            setShowOnlyBookmarked(false);
+          }}
+          onStartPracticeTest={handleStartPracticeTest}
+          totalQuestions={allQuestions.length}
+        />
+
         {/* Designer Customization Toolbar */}
         <DesignerToolbar
           customization={customization}
@@ -163,6 +238,7 @@ export default function App() {
           topics={TOPIC_SECTIONS}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          onStartPracticeTest={() => handleStartPracticeTest()}
         />
 
         {/* Paper Sheet Preview Area */}

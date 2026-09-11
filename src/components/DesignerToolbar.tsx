@@ -10,6 +10,7 @@ interface Props {
   topics: Array<{ id: string; title: string; count: number; range: string }>;
   searchQuery: string;
   onSearchChange: (q: string) => void;
+  onStartPracticeTest?: () => void;
 }
 
 export const DesignerToolbar: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const DesignerToolbar: React.FC<Props> = ({
   topics,
   searchQuery,
   onSearchChange,
+  onStartPracticeTest,
 }) => {
   const themes: Array<{ id: DesignTheme; label: string; accentColor: string }> = [
     { id: 'royal-navy', label: 'Royal Navy & Gold', accentColor: 'bg-blue-900 border-amber-400' },
@@ -221,10 +223,23 @@ export const DesignerToolbar: React.FC<Props> = ({
 
       {/* Topic Filter Pills */}
       <div className="pt-2 border-t border-slate-100">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 text-xs scrollbar-thin">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 text-xs scrollbar-thin">
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0 mr-1">
             Topic Filter:
           </span>
+
+          {/* Standout Practice Test Button with Bold Color & Shadow */}
+          {onStartPracticeTest && (
+            <button
+              onClick={onStartPracticeTest}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full shrink-0 font-extrabold text-xs bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-md shadow-amber-500/25 border border-amber-300 transition-all cursor-pointer hover:scale-105 active:scale-95"
+              title="Launch Practice Test Interface with instant audio and scoring"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+              <span>Practice Test</span>
+            </button>
+          )}
+
           <button
             onClick={() => onSelectTopic('all')}
             className={`px-2.5 py-1 rounded-full shrink-0 font-medium transition-all ${
