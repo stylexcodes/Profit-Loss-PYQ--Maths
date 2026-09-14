@@ -57,8 +57,17 @@ export const PDFSheetPage: React.FC<Props> = ({
         breakAfter: 'page',
       }}
     >
+      {/* Faint Diagonal Watermark */}
+      {customization.showWatermark && (
+        <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center opacity-[0.12] select-none z-0 overflow-hidden">
+          <div className="text-[64px] font-extrabold uppercase -rotate-45 tracking-widest text-slate-900 whitespace-nowrap">
+            {customization.watermarkText || 'Maths By Abhishek Upadhyay Sir'}
+          </div>
+        </div>
+      )}
+
       {/* Top Running Header */}
-      <div className="border-b-2 border-slate-900 pb-2 mb-2 flex items-center justify-between text-xs shrink-0">
+      <div className="border-b-2 border-slate-900 pb-2 mb-2 flex items-center justify-between text-xs shrink-0 relative z-10">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-slate-900 text-amber-300 flex items-center justify-center font-bold text-[11px]">
             AU
@@ -84,7 +93,7 @@ export const PDFSheetPage: React.FC<Props> = ({
       </div>
 
       {/* Main Questions Grid - 2 Columns */}
-      <div className="flex-1 flex gap-2.5 overflow-hidden">
+      <div className="flex-1 flex gap-2.5 overflow-hidden relative z-10">
         {/* Left Column */}
         <div className={`flex-1 flex flex-col justify-between gap-1.5 ${!isTwoCol ? 'w-full' : ''}`}>
           {leftCol.map((q) => (
@@ -117,7 +126,7 @@ export const PDFSheetPage: React.FC<Props> = ({
       </div>
 
       {/* Bottom Running Footer */}
-      <div className="border-t border-slate-300 pt-1.5 mt-2 flex items-center justify-between text-[10px] text-slate-500 shrink-0 font-medium">
+      <div className="border-t border-slate-300 pt-1.5 mt-2 flex items-center justify-between text-[10px] text-slate-500 shrink-0 font-medium relative z-10">
         <div className="flex items-center gap-1">
           <CheckCircle className="w-3 h-3 text-emerald-600" />
           <span>SSC CGL, CHSL, CPO, GD, MTS • UPP Constable/SI • RRB NTPC</span>

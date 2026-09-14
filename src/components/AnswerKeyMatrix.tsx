@@ -23,8 +23,17 @@ export const AnswerKeyMatrix: React.FC<Props> = ({ questions, customization }) =
         breakAfter: 'page',
       }}
     >
+      {/* Faint Diagonal Watermark */}
+      {customization.showWatermark && (
+        <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center opacity-[0.12] select-none z-0 overflow-hidden">
+          <div className="text-[64px] font-extrabold uppercase -rotate-45 tracking-widest text-slate-900 whitespace-nowrap">
+            {customization.watermarkText || 'Maths By Abhishek Upadhyay Sir'}
+          </div>
+        </div>
+      )}
+
       {/* Top Header */}
-      <div className="border-b-2 border-slate-900 pb-2 mb-2 flex items-center justify-between text-xs shrink-0">
+      <div className="border-b-2 border-slate-900 pb-2 mb-2 flex items-center justify-between text-xs shrink-0 relative z-10">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-slate-900 text-amber-300 flex items-center justify-center font-bold text-[11px]">
             <KeyRound className="w-3.5 h-3.5" />
@@ -50,7 +59,7 @@ export const AnswerKeyMatrix: React.FC<Props> = ({ questions, customization }) =
       </div>
 
       {/* Grid of Answers: 10 per row for all 180 questions */}
-      <div className="grid grid-cols-10 gap-1 font-mono-num text-[10px] flex-1 my-1">
+      <div className="grid grid-cols-10 gap-1 font-mono-num text-[10px] flex-1 my-1 relative z-10">
         {questions.map((q) => (
           <div
             key={q.id}
@@ -67,7 +76,7 @@ export const AnswerKeyMatrix: React.FC<Props> = ({ questions, customization }) =
       </div>
 
       {/* Quick Revision Formulas for Profit & Loss */}
-      <div className="mt-2 p-2.5 rounded-lg bg-amber-50/70 border border-amber-200 text-[10.5px] shrink-0 text-slate-800">
+      <div className="mt-2 p-2.5 rounded-lg bg-amber-50/70 border border-amber-200 text-[10.5px] shrink-0 text-slate-800 relative z-10">
         <div className="flex items-center gap-1.5 font-bold text-amber-900 mb-1">
           <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
           <span>Profit & Loss Important Formulas & Exam Shortcuts (Abhishek Sir)</span>
@@ -93,7 +102,7 @@ export const AnswerKeyMatrix: React.FC<Props> = ({ questions, customization }) =
       </div>
 
       {/* Bottom Running Footer */}
-      <div className="border-t border-slate-300 pt-1.5 mt-2 flex items-center justify-between text-[10px] text-slate-500 shrink-0 font-medium">
+      <div className="border-t border-slate-300 pt-1.5 mt-2 flex items-center justify-between text-[10px] text-slate-500 shrink-0 font-medium relative z-10">
         <div className="flex items-center gap-1">
           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
           <span>Calculated & cross-verified from official SSC, UPP, UPSI & Railway answer keys</span>

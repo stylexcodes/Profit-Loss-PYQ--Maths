@@ -262,9 +262,9 @@ export function getStandaloneBookletHTML(
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) rotate(-45deg);
-      font-size: 46px;
+      font-size: 56px;
       font-weight: 900;
-      color: rgba(15, 23, 42, 0.04) !important;
+      color: rgba(15, 23, 42, 0.09) !important;
       text-transform: uppercase;
       letter-spacing: 0.25em;
       white-space: nowrap;
@@ -315,8 +315,8 @@ export function getStandaloneBookletHTML(
         gap: 10px !important;
       }
       .watermark-layer {
-        color: rgba(15, 23, 42, 0.05) !important;
-        font-size: 54px !important;
+        color: rgba(15, 23, 42, 0.1) !important;
+        font-size: 64px !important;
       }
       .card {
         padding: 10px !important;

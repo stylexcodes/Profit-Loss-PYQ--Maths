@@ -243,15 +243,6 @@ export default function App() {
 
         {/* Paper Sheet Preview Area */}
         <div id="printable-pdf-area" className="relative bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-8 md:p-12 shadow-sm">
-          {/* Faint Watermark (Optional) */}
-          {customization.showWatermark && (
-            <div className="fixed inset-0 pointer-events-none flex items-center justify-center opacity-[0.035] select-none z-0">
-              <span className="text-4xl md:text-7xl font-extrabold uppercase -rotate-45 tracking-widest text-slate-900">
-                {customization.watermarkText}
-              </span>
-            </div>
-          )}
-
           {/* Designer Cover Page */}
           {customization.showCoverPage && (
             <div className="mb-10 sm:mb-14">
