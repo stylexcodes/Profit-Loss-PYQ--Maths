@@ -226,41 +226,109 @@ export function getStandaloneBookletHTML(
       .avoid-break { page-break-inside: avoid; break-inside: avoid; }
     }
     .cover-box {
-      background: linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #0f172a 100%);
-      color: #fff;
+      background-color: #091e3a !important;
+      background-image: linear-gradient(135deg, #091e3a 0%, #1e3a8a 50%, #0f172a 100%) !important;
+      color: #ffffff !important;
       padding: 40px;
       border-radius: 12px;
       margin-bottom: 30px;
       text-align: center;
-      border: 3px double #f59e0b;
+      border: 3px double #f59e0b !important;
     }
-    .cover-title { font-family: 'Playfair Display', serif; font-size: 38px; margin: 10px 0; color: #fbbf24; }
-    .cover-sub { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
+    .cover-title { font-family: 'Playfair Display', serif; font-size: 38px; margin: 10px 0; color: #fbbf24 !important; }
+    .cover-sub { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; color: #ffffff !important; }
     .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-right: 6px; }
     .badge-q { background: #0f172a; color: #fde047; font-family: 'JetBrains Mono', monospace; }
     .badge-type { background: #e2e8f0; color: #334155; }
     .badge-exam { background: #e0f2fe; color: #0369a1; }
     .badge-year { background: #fef3c7; color: #92400e; font-family: 'JetBrains Mono', monospace; }
-    .question-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 14px;
+    
+    .sheet-container {
+      position: relative;
+      margin: 0 auto 30px auto;
+      background: #fff;
+      padding: 10mm 12mm;
+      box-sizing: border-box;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      page-break-after: always;
+      break-after: page;
+      display: block;
+      overflow: hidden;
     }
+    
+    .watermark-layer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-size: 46px;
+      font-weight: 900;
+      color: rgba(15, 23, 42, 0.04) !important;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .sheet-header, .sheet-footer, .card {
+      position: relative;
+      z-index: 10;
+    }
+    
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    
     .card {
       background: #fff;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
-      padding: 14px;
-      margin-bottom: 12px;
+      padding: 12px;
       page-break-inside: avoid;
       break-inside: avoid;
     }
+    
+    @media (max-width: 600px) {
+      .sheet-grid { grid-template-columns: 1fr; }
+      .sheet-container { padding: 15px; }
+      .watermark-layer { font-size: 24px; }
+    }
+    
+    @media print {
+      .sheet-container {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        display: block !important;
+      }
+      .sheet-grid {
+        grid-template-columns: 1fr 1fr !important; /* Force 2 cols on print */
+        gap: 10px !important;
+      }
+      .watermark-layer {
+        color: rgba(15, 23, 42, 0.05) !important;
+        font-size: 54px !important;
+      }
+      .card {
+        padding: 10px !important;
+      }
+    }
+    
     .options-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px;
-      margin-top: 10px;
-      font-size: 12px;
+      margin-top: 8px;
+      font-size: 11px;
     }
     .opt-btn {
       background: #f8fafc;
@@ -268,36 +336,8 @@ export function getStandaloneBookletHTML(
       border-radius: 4px;
       padding: 6px 10px;
     }
-    .sheet-container {
-      width: 210mm;
-      min-height: 290mm;
-      max-height: 290mm;
-      margin: 0 auto 30px auto;
-      background: #fff;
-      padding: 10mm 12mm;
-      box-sizing: border-box;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      page-break-after: always;
-      break-after: page;
-    }
-    @media print {
-      body { background: #fff; padding: 0; }
-      .no-print { display: none !important; }
-      .sheet-container {
-        border: none !important;
-        margin: 0 !important;
-        padding: 8mm 10mm !important;
-        width: 100% !important;
-        min-height: 285mm !important;
-        page-break-after: always !important;
-        break-after: page !important;
-      }
-    }
     .sheet-header {
+
       border-bottom: 2px solid #0f172a;
       padding-bottom: 6px;
       margin-bottom: 8px;
@@ -449,6 +489,7 @@ export function getStandaloneBookletHTML(
 
       return `
   <div class="sheet-container">
+    <div class="watermark-layer">${customization.watermarkText || 'Maths By Abhishek Upadhyay Sir'}</div>
     <div class="sheet-header">
       <div>
         <strong>Maths By Abhishek Upadhyay Sir</strong> | Profit & Loss Level-1
@@ -516,6 +557,7 @@ export function getStandaloneBookletHTML(
 
   <!-- Master Answer Key Sheet -->
   <div class="sheet-container">
+    <div class="watermark-layer">${customization.watermarkText || 'Maths By Abhishek Upadhyay Sir'}</div>
     <div class="sheet-header">
       <div>
         <strong>Master Answer Key (Q.1 to Q.180)</strong>
