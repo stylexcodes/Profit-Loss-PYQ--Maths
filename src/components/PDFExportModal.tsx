@@ -144,124 +144,128 @@ export const PDFExportModal: React.FC<Props> = ({
 
         {/* Modal Body */}
         <div className="p-5 sm:p-6 space-y-4 overflow-y-auto">
-          {/* Option 1: Direct High-Definition PDF File (.pdf) */}
-          <div className="p-4 rounded-xl border-2 border-amber-400/80 bg-gradient-to-br from-amber-50/70 to-amber-100/30 relative overflow-hidden">
+          {/* Option 1: 100% Vector Print to PDF (Zero Blur, Infinite Zoom) - Now Recommended */}
+          <div className="p-4 rounded-xl border-2 border-emerald-500/80 bg-gradient-to-br from-emerald-50/70 to-emerald-100/30 relative overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-amber-500 text-slate-950">
-                    Recommended
+                  <span className="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500 text-white shadow-sm">
+                    Recommended (Zero Blur)
                   </span>
                   <h4 className="font-bold text-slate-900 text-sm sm:text-base">
-                    Download High-Definition .PDF File
+                    Save as 100% Vector PDF
                   </h4>
                 </div>
                 <p className="text-xs text-slate-700 leading-relaxed">
-                  Renders discrete A4 sheets at <strong>300 DPI print quality</strong> with subpixel text smoothing. No blurriness, no cut questions, and crystal clear Hindi/English mathematical formulas.
+                  Launches your system's native Print to PDF engine. Guarantees <strong>100% pure vector text</strong>, zero pixelation at 10,000% zoom, completely selectable text, and perfectly crisp Hindi/English fonts.
                 </p>
-
-                {/* Resolution Selector */}
-                <div className="flex items-center gap-2 pt-1">
-                  <span className="text-[11px] font-semibold text-slate-600">Print Quality:</span>
-                  <div className="inline-flex rounded-lg bg-white/80 p-0.5 border border-amber-200 text-xs">
-                    <button
-                      onClick={() => setDpiMode('300')}
-                      className={`px-2.5 py-0.5 rounded-md font-bold text-[11px] transition-all cursor-pointer ${
-                        dpiMode === '300'
-                          ? 'bg-slate-900 text-amber-300 shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      300 DPI (Ultra-Sharp)
-                    </button>
-                    <button
-                      onClick={() => setDpiMode('200')}
-                      className={`px-2.5 py-0.5 rounded-md font-bold text-[11px] transition-all cursor-pointer ${
-                        dpiMode === '200'
-                          ? 'bg-slate-900 text-amber-300 shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      200 DPI (Fast)
-                    </button>
-                  </div>
+                <div className="flex items-center gap-2 pt-1 text-[11px] font-medium text-emerald-800">
+                  <Zap className="w-3.5 h-3.5" />
+                  <span>Tip: In the print dialog, select "Save as PDF".</span>
                 </div>
               </div>
 
               <button
-                disabled={isGeneratingPDF}
-                onClick={handleDirectDownloadPDF}
-                className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:bg-slate-700 text-amber-300 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all shrink-0 cursor-pointer self-start sm:self-center"
+                onClick={handleVectorPrint}
+                className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-emerald-500/25 transition-all shrink-0 cursor-pointer self-start sm:self-center hover:scale-105 active:scale-95"
               >
-                {isGeneratingPDF ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-                    <span>Rendering HD...</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-4 h-4 text-amber-400" />
-                    <span>Download .PDF</span>
-                  </>
-                )}
+                <Printer className="w-4 h-4 text-emerald-100" />
+                <span>Save Vector PDF</span>
               </button>
             </div>
-
-            {/* Progress bar */}
-            {isGeneratingPDF && downloadProgress && (
-              <div className="mt-3 pt-3 border-t border-amber-200">
-                <div className="flex items-center justify-between text-xs font-semibold text-amber-950 mb-1">
-                  <span>{downloadProgress.message}</span>
-                  <span className="font-mono-num">{downloadProgress.progress}%</span>
-                </div>
-                <div className="w-full h-2 bg-amber-200/70 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-amber-500 rounded-full transition-all duration-300"
-                    style={{ width: `${downloadProgress.progress}%` }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {successMessage && (
-              <div className="mt-3 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-start gap-2">
-                <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span>{successMessage}</span>
-              </div>
-            )}
-
-            {errorMessage && (
-              <div className="mt-3 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-                <span>{errorMessage}</span>
-              </div>
-            )}
           </div>
 
-          {/* Option 2: 100% Vector Print to PDF (Zero Blur, Infinite Zoom) */}
-          <div className="p-4 rounded-xl border border-purple-200 bg-purple-50/50 hover:bg-purple-50 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
+          {/* Option 2: Direct High-Definition PDF File (.pdf) (Image Based - Fallback) */}
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white transition-all flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-700 text-white">
-                  100% Vector Text
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-200 text-slate-700">
+                  Fallback Engine
                 </span>
                 <h4 className="font-bold text-slate-900 text-sm">
-                  Save as Vector PDF (Browser Print Engine)
+                  Download Flattened PDF (Image-based)
                 </h4>
               </div>
               <p className="text-xs text-slate-600 mt-1">
-                Launches your system's native Print to PDF engine with pure vector text. Zero pixelation at 1000% zoom, 100% selectable Hindi/English font glyphs!
+                Renders discrete A4 sheets via HTML2Canvas at 300 DPI. Note: Text may become blurry when heavily zoomed in because it is rendered as an image, but it guarantees layout accuracy on older browsers.
               </p>
+              
+              {/* Resolution Selector */}
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-[11px] font-semibold text-slate-600">Quality:</span>
+                <div className="inline-flex rounded-lg bg-slate-100 p-0.5 border border-slate-200 text-xs">
+                  <button
+                    onClick={() => setDpiMode('300')}
+                    className={`px-2.5 py-0.5 rounded-md font-bold text-[11px] transition-all cursor-pointer ${
+                      dpiMode === '300'
+                        ? 'bg-slate-700 text-white shadow-xs'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    300 DPI (HD)
+                  </button>
+                  <button
+                    onClick={() => setDpiMode('200')}
+                    className={`px-2.5 py-0.5 rounded-md font-bold text-[11px] transition-all cursor-pointer ${
+                      dpiMode === '200'
+                        ? 'bg-slate-700 text-white shadow-xs'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    200 DPI (Fast)
+                  </button>
+                </div>
+              </div>
             </div>
 
             <button
-              onClick={handleVectorPrint}
-              className="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all shrink-0 cursor-pointer"
+              disabled={isGeneratingPDF}
+              onClick={handleDirectDownloadPDF}
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:bg-slate-600 text-white font-bold text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all shrink-0 cursor-pointer self-start sm:self-center"
             >
-              <Printer className="w-4 h-4 text-purple-200" />
-              <span>Vector Print</span>
+              {isGeneratingPDF ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Rendering...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download Image PDF</span>
+                </>
+              )}
             </button>
           </div>
+
+          {/* Progress bar for Option 2 */}
+          {isGeneratingPDF && downloadProgress && (
+            <div className="mt-3 pt-3 border-t border-slate-200">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 mb-1">
+                <span>{downloadProgress.message}</span>
+                <span className="font-mono-num">{downloadProgress.progress}%</span>
+              </div>
+              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-slate-800 rounded-full transition-all duration-300"
+                  style={{ width: `${downloadProgress.progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="mt-2 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-start gap-2">
+              <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <span>{successMessage}</span>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="mt-2 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
 
           {/* Option 3: Instant Offline Booklet (.html) */}
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
